@@ -20,15 +20,16 @@ class _LoginPageState extends State<LoginPage> {
     try {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        bool success = await loginUser(_email, _password);
+        Navigator.pushNamed(context, "/home");
+        // bool success = await loginUser(_email, _password);
 
-        if (success) {
-          Navigator.pushNamed(context, "/home");
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Invalid email or password")),
-          );
-        }
+        // if (success) {
+        //   Navigator.pushNamed(context, "/home");
+        // } else {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text("Invalid email or password")),
+        //   );
+        // }
       }
     } catch (e) {
       print("Failed to login: $e");
