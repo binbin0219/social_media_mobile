@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_mobile/widgets/Post.dart';
+import 'package:social_media_mobile/widgets/post_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -99,14 +99,7 @@ class HomePateState extends State<HomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: ListView.separated(
-        padding: EdgeInsets.all(24),
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return Post();
-        },
-        separatorBuilder: (context, index) => const SizedBox(height: 20),
-      ),
+      body: PostList(),
       bottomNavigationBar: ClipRRect(
         child: BottomAppBar(
           color: Colors.white,

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:social_media_mobile/models/post_attachment.dart';
 import 'dart:ui' as ui;
 
 import 'package:social_media_mobile/widgets/SmartImage.dart';
+import 'package:social_media_mobile/widgets/video_player.dart';
 
 class PostAttachmentCarousel extends StatefulWidget {
-  const PostAttachmentCarousel({super.key});
+  final int postId;
+  final List<PostAttachment> attachments;
+
+  const PostAttachmentCarousel({super.key, required this.postId, required this.attachments});
 
   @override
   State<StatefulWidget> createState() => PostAttachmentCarouselState();
@@ -23,9 +29,9 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
   @override
   Widget build(BuildContext context) {
     final canBack = _index > 0;
-    final canNext = _index < 1;
+    final canNext = _index < widget.attachments.length - 1;
 
-    void _goto(int i) {
+    void goto(int i) {
       try {
         _controller.animateToPage(
           i,
@@ -43,41 +49,46 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
         children: [
           PageView.builder(
             controller: _controller,
-            itemCount: 2,
+            itemCount: widget.attachments.length,
             onPageChanged: (i) => setState(() => _index = i),
             itemBuilder:
-                (context, index) => Center(
-                  child: Stack(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ImageFiltered(
-                            imageFilter: ui.ImageFilter.blur(
-                              sigmaX: 100,
-                              sigmaY: 100,
-                            ),
-                            child: Image.network(
-                              index == 1
-                                  ? 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8='
-                                  : 'https://images.unsplash.com/photo-1715731456131-d4c3697a20f0?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Z3JlZW4lMjBuYXR1cmV8ZW58MHx8MHx8fDA%3D',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
+                (context, index) {
+                  final PostAttachment attachment = widget.attachments[index];
+                  final bool isVideo = attachment.mimeType.startsWith("video");
+                  return Center(
+                    child: Stack(
+                      children: [
+                        if(!isVideo) 
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                                ImageFiltered(
+                                  imageFilter: ui.ImageFilter.blur(
+                                    sigmaX: 100,
+                                    sigmaY: 100,
+                                  ),
+                                  child: Image.network(
+                                    attachment.getUrl(widget.postId),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    errorBuilder: (context, error, stackTrace) => 
+                                      const Icon(Icons.error),
+                                  ),
+                                ),
 
-                          SmartImage(
-                            url:
-                                index == 1
-                                    ? 'https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8='
-                                    : 'https://images.unsplash.com/photo-1715731456131-d4c3697a20f0?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Z3JlZW4lMjBuYXR1cmV8ZW58MHx8MHx8fDA%3D',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                                SmartImage(
+                                  url: attachment.getUrl(widget.postId)
+                                ),
+                            ],
+                          )
+                        else 
+                          VideoPlayer(url: attachment.getUrl(widget.postId))
+                      ],
+                    ),
+                  );
+                }
+                  
           ),
 
           if (canBack)
@@ -91,7 +102,7 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
                       Colors.black.withValues(alpha: 0.6),
                     ),
                   ),
-                  onPressed: () => canBack ? _goto(_index - 1) : null,
+                  onPressed: () => canBack ? goto(_index - 1) : null,
                   icon: const Icon(Icons.chevron_left),
                 ),
               ),
@@ -109,7 +120,7 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
                       Colors.black.withValues(alpha: 0.6),
                     ),
                   ),
-                  onPressed: () => _goto(_index + 1),
+                  onPressed: () => goto(_index + 1),
                   icon: const Icon(Icons.chevron_right, color: Colors.white),
                 ),
               ),
@@ -117,8 +128,8 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
 
           Positioned(
             left: null,
-            right: 0,
-            top: 0,
+            right: 5,
+            top: 5,
             child: Center(
               child: Container(
                 padding: EdgeInsets.all(8),
@@ -127,7 +138,7 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "${_index + 1} / 2",
+                  "${_index + 1} / ${widget.attachments.length}",
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),

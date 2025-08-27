@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_mobile/api/api_client.dart';
 import 'package:social_media_mobile/screens/home_page.dart';
 import 'package:social_media_mobile/screens/login_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+late ApiClient api;
+
 Future<void> main() async {
   await dotenv.load(); // Load the .env file
+  api = await ApiClient.create();
   runApp(const MyApp());
 }
 

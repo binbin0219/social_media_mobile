@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_mobile/widgets/PostAttachmentCarousel.dart';
 import 'package:social_media_mobile/widgets/PostContent.dart';
+import 'package:social_media_mobile/models/post.dart' as post_model;
 
 class Post extends StatefulWidget {
-  const Post({super.key});
+  final post_model.Post post;
+
+  const Post({super.key, required this.post});
 
   @override
   State<StatefulWidget> createState() => PostState();
@@ -57,7 +60,45 @@ class PostState extends State<Post> {
                 ],
               ),
 
-              IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
+              IconButton(
+                icon: const Icon(Icons.more_horiz),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context, 
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.all(Radius.circular(15))
+                    ),
+                    builder: (BuildContext context) {
+                      return SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 4,
+                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 212, 212, 212),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+
+                            ListTile(
+                              leading: Icon(Icons.edit_outlined),
+                              title: const Text("Edit"),
+                            ),
+
+                            ListTile(
+                              leading: Icon(Icons.delete_outline),
+                              title: const Text("Delete"),
+                            )
+                          ],
+                        )
+                      );
+                    }
+                  );
+                }
+              ),
             ],
           ),
 
@@ -66,18 +107,19 @@ class PostState extends State<Post> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              "Example title",
+              widget.post.title,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
 
           const SizedBox(height: 6),
 
-          Align(alignment: Alignment.topLeft, child: const Postcontent()),
+          Align(alignment: Alignment.topLeft, child: Postcontent(content: widget.post.content)),
 
           const SizedBox(height: 12),
 
-          PostAttachmentCarousel(),
+          if(widget.post.attachments.isNotEmpty) 
+            PostAttachmentCarousel(attachments: widget.post.attachments, postId: widget.post.id),
 
           const SizedBox(height: 25),
 

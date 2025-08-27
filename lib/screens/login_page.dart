@@ -1,8 +1,7 @@
-import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
+import 'package:social_media_mobile/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,34 +19,31 @@ class _LoginPageState extends State<LoginPage> {
     try {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
+        await loginUser(_email, _password);
         Navigator.pushNamed(context, "/home");
-        // bool success = await loginUser(_email, _password);
-
-        // if (success) {
-        //   Navigator.pushNamed(context, "/home");
-        // } else {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(content: Text("Invalid email or password")),
-        //   );
-        // }
       }
-    } catch (e) {
-      print("Failed to login: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Something went wrong, please try again."),
-        ),
-      );
+    } on DioException catch (e) {
+      if(e.response?.statusCode == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invalid email or password")),
+          );
+      } else {
+        print("Failed to login: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Something went wrong, please try again."),
+          ),
+        );
+      }
     }
   }
 
   Future<bool> loginUser(String email, String password) async {
-    final response = await http.post(
-      Uri.parse("${dotenv.env['BACK_END']}/api/auth/login"),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
+    final response = await api.call(
+      "POST",
+      "/api/auth/login",
+      data: {'email': email, 'password': password}
     );
-    print(response.statusCode);
 
     return response.statusCode == 200;
   }

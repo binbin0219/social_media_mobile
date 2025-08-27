@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Postcontent extends StatefulWidget {
-  const Postcontent({super.key});
+  final String content;
+  const Postcontent({super.key, required this.content});
 
   @override
   State<StatefulWidget> createState() => PostContentState();
@@ -9,8 +10,6 @@ class Postcontent extends StatefulWidget {
 
 class PostContentState extends State<Postcontent> {
   final int max = 100;
-  String _input =
-      "Example content Example content Example content Example content Example content Example content Example content Example content Example content Example content Example content";
   late bool isExeededMax;
   late String firstPart;
   bool isShowingMore = false;
@@ -18,10 +17,10 @@ class PostContentState extends State<Postcontent> {
   @override
   void initState() {
     super.initState();
-    isExeededMax = _input.length > max;
+    isExeededMax = widget.content.length > max;
 
     if (isExeededMax) {
-      firstPart = _input.substring(0, max) + "...";
+      firstPart = "${widget.content.substring(0, max)}...";
     }
   }
 
@@ -52,7 +51,7 @@ class PostContentState extends State<Postcontent> {
           ],
 
           if (isShowingMore) ...[
-            Text(_input),
+            Text(widget.content),
             TextButton(
               onPressed: () => setState(() => isShowingMore = false),
               style: TextButton.styleFrom(
@@ -68,7 +67,7 @@ class PostContentState extends State<Postcontent> {
             ),
           ],
         ] else
-          Text(_input),
+          Text(widget.content),
       ],
     );
   }

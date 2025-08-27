@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SmartImage extends StatefulWidget {
   final String url;
@@ -16,15 +17,14 @@ class SmartImageState extends State<SmartImage> {
       widget.url,
       fit: BoxFit.contain,
       loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child; // done
-        final expected = loadingProgress.expectedTotalBytes;
-        final loaded = loadingProgress.cumulativeBytesLoaded;
-        return Center(
-          child: CircularProgressIndicator(
-            value:
-                expected != null
-                    ? loaded / expected
-                    : null, // null = indeterminate
+        if (loadingProgress == null) return child;
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!, 
+          highlightColor: Colors.grey[100]!, 
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
           ),
         );
       },
