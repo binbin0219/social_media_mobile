@@ -10,7 +10,11 @@ class PostAttachmentCarousel extends StatefulWidget {
   final int postId;
   final List<PostAttachment> attachments;
 
-  const PostAttachmentCarousel({super.key, required this.postId, required this.attachments});
+  const PostAttachmentCarousel({
+    super.key,
+    required this.postId,
+    required this.attachments,
+  });
 
   @override
   State<StatefulWidget> createState() => PostAttachmentCarouselState();
@@ -51,44 +55,41 @@ class PostAttachmentCarouselState extends State<PostAttachmentCarousel> {
             controller: _controller,
             itemCount: widget.attachments.length,
             onPageChanged: (i) => setState(() => _index = i),
-            itemBuilder:
-                (context, index) {
-                  final PostAttachment attachment = widget.attachments[index];
-                  final bool isVideo = attachment.mimeType.startsWith("video");
-                  return Center(
-                    child: Stack(
-                      children: [
-                        if(!isVideo) 
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                                ImageFiltered(
-                                  imageFilter: ui.ImageFilter.blur(
-                                    sigmaX: 100,
-                                    sigmaY: 100,
-                                  ),
-                                  child: Image.network(
-                                    attachment.getUrl(widget.postId),
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    errorBuilder: (context, error, stackTrace) => 
+            itemBuilder: (context, index) {
+              final PostAttachment attachment = widget.attachments[index];
+              final bool isVideo = attachment.mimeType.startsWith("video");
+              return Center(
+                child: Stack(
+                  children: [
+                    if (!isVideo)
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ImageFiltered(
+                            imageFilter: ui.ImageFilter.blur(
+                              sigmaX: 100,
+                              sigmaY: 100,
+                            ),
+                            child: Image.network(
+                              attachment.getUrl(widget.postId),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              errorBuilder:
+                                  (context, error, stackTrace) =>
                                       const Icon(Icons.error),
-                                  ),
-                                ),
+                            ),
+                          ),
 
-                                SmartImage(
-                                  url: attachment.getUrl(widget.postId)
-                                ),
-                            ],
-                          )
-                        else 
-                          VideoPlayer(url: attachment.getUrl(widget.postId))
-                      ],
-                    ),
-                  );
-                }
-                  
+                          SmartImage(url: attachment.getUrl(widget.postId)),
+                        ],
+                      )
+                    else
+                      VideoPlayer(url: attachment.getUrl(widget.postId)),
+                  ],
+                ),
+              );
+            },
           ),
 
           if (canBack)
