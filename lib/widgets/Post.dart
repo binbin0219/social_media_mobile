@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_mobile/widgets/PostAttachmentCarousel.dart';
 import 'package:social_media_mobile/widgets/PostContent.dart';
 import 'package:social_media_mobile/models/post.dart' as post_model;
+import 'package:social_media_mobile/widgets/post_like_button.dart';
 
 class Post extends StatefulWidget {
   final post_model.Post post;
@@ -125,35 +126,10 @@ class PostState extends State<Post> {
 
           Row(
             children: [
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(6),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.favorite_border, color: Colors.red),
-                        const SizedBox(width: 6),
-                        Text(
-                          "0",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "Likes",
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 111, 112, 112),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              PostLikeButton(
+                postId: widget.post.id, 
+                likeCount: widget.post.likeCount, 
+                liked: widget.post.liked
               ),
 
               Material(
@@ -171,7 +147,7 @@ class PostState extends State<Post> {
                         Icon(Icons.forum_outlined, color: Colors.blue),
                         const SizedBox(width: 6),
                         Text(
-                          "0",
+                          widget.post.commentCount.toString(),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(width: 6),

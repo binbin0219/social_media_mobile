@@ -1,19 +1,26 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_media_mobile/api/api_client.dart';
 import 'package:social_media_mobile/main.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
-
+  
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _submitForm() async {
     try {
@@ -90,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           child: TextFormField(
+                            initialValue: "tjiungbin10@gmail.com",
                             decoration: const InputDecoration(
                               hintText: 'Email',
                               prefixIcon: Icon(Icons.email),
@@ -119,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           child: TextFormField(
+                            initialValue: "binbin0219",
                             decoration: InputDecoration(
                               hintText: "Password",
                               border: InputBorder.none,
