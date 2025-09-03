@@ -36,7 +36,7 @@ class Post {
       content: json["content"] ?? "", 
       create_at: json["create_at"] ?? "", 
       commentCount: json["commentCount"] ?? 0, 
-      likeCount: json["likeCout"] ?? 0, 
+      likeCount: json["likeCount"] ?? 0, 
       comments: json["comments"] ?? [], 
       attachments: (json["attachments"] as List).map((attachment) => PostAttachment.fromJson(attachment)).toList(),
       liked: json["liked"] ?? false,

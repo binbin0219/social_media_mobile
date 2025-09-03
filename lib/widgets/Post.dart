@@ -16,6 +16,7 @@ class Post extends StatefulWidget {
 class PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
+    print(widget.post.id);
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
