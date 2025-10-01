@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_mobile/widgets/chat_list.dart';
 import 'package:social_media_mobile/widgets/post_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,6 +11,25 @@ class HomePage extends StatefulWidget {
 
 class HomePateState extends State<HomePage> {
   int _selectedIndex = 0;
+
+  Widget _getBodyWidget(int selectedIndex) {
+    switch(selectedIndex) {
+      case 0:
+        return PostList();
+
+      case 2:
+        return Column(
+          children: [
+            Expanded(
+              child: ChatList() 
+            )
+          ],
+        );
+
+      default:
+        return const Text("Page not found");
+    }
+  }
 
   void _onItemTapped(int idx) {
     setState(() {
@@ -99,7 +119,7 @@ class HomePateState extends State<HomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: PostList(),
+      body: _getBodyWidget(_selectedIndex),
       bottomNavigationBar: ClipRRect(
         child: BottomAppBar(
           color: Colors.white,

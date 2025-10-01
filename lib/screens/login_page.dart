@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/api/api_client.dart';
 import 'package:social_media_mobile/main.dart';
+import 'package:social_media_mobile/models/currentUser.dart';
+import 'package:social_media_mobile/providers/current_user_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -27,6 +29,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         await loginUser(_email, _password);
+        ref.read(currentUserProvider.notifier).state = await fetchCurrentUser();
         Navigator.pushNamed(context, "/home");
       }
     } on DioException catch (e) {
@@ -53,6 +56,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
 
     return response.statusCode == 200;
+  }
+
+  Future<CurrentUser> fetchCurrentUser() async {
+    final response = await api.call("GET", 
+      "/api/auth/me"
+    );
+
+    return CurrentUser.fromJson(response.data);
   }
 
   @override
@@ -97,7 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ],
                           ),
                           child: TextFormField(
-                            initialValue: "tjiungbin10@gmail.com",
+                            initialValue: "tjiungbin@gmail.com",
                             decoration: const InputDecoration(
                               hintText: 'Email',
                               prefixIcon: Icon(Icons.email),
