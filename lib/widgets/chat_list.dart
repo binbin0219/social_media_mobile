@@ -44,17 +44,17 @@ class ChatListState extends ConsumerState<ChatList> {
         
         return InkWell(
           child: SizedBox(
-            height: 47,
+            height: 50,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 UserAvatar(
                   userId: targetUser.userId,
-                  height: 40,
-                  width: 40,
+                  height: 45,
+                  width: 45,
                 ),
 
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
 
                 Expanded(
                   child: Column(
@@ -71,7 +71,8 @@ class ChatListState extends ConsumerState<ChatList> {
                       Text(
                         chatRoom.messagePreview ?? "Start chating",
                         style: TextStyle(
-                          fontSize: 16
+                          fontSize: 16,
+                          color: Colors.grey[500],
                         ),
                       )
                     ],
@@ -82,7 +83,12 @@ class ChatListState extends ConsumerState<ChatList> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(formatTime(chatRoom.lastMessageAt)),
+                    Text(
+                      formatTime(chatRoom.lastMessageAt),
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                      ),
+                    ),
                     UnreadBadge(count: chatRoom.unreadCount),
                   ],
                 ),
