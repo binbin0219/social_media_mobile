@@ -1,6 +1,8 @@
+import 'package:social_media_mobile/models/has_id.dart';
 import 'package:social_media_mobile/models/post_attachment.dart';
 
-class Post {
+class Post implements HasId {
+  @override
   final int id;
   final String title;
   final String content;

@@ -1,6 +1,7 @@
 import 'package:social_media_mobile/models/chat_room_member.dart';
+import 'package:social_media_mobile/models/has_id.dart';
 
-class ChatRoom {
+class ChatRoom implements HasId {
   final String id;
   final String name;
   final String type;

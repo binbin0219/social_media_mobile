@@ -21,12 +21,14 @@ class PostLikeButton extends ConsumerStatefulWidget {
 
 class PostLikeButtonState extends ConsumerState<PostLikeButton> {
   late bool _liked;
+  late int _likeCount;
   late PostService _postService;
 
   @override
   void initState() {
     super.initState();
     _liked = widget.liked;
+    _likeCount = widget.likeCount;
     _postService = ref.read(postServiceProvider);
   }
 
@@ -37,16 +39,29 @@ class PostLikeButtonState extends ConsumerState<PostLikeButton> {
       child: InkWell(
         onTap: () async {
           final bool oldLikeState = _liked;
+          final int oldLikeCount = _likeCount;
+
           try {
             final int postId = widget.postId;
-            setState(() {
-              _liked = !_liked;
-            });
-            oldLikeState == true ? await _postService.unlikePost(postId) : await _postService.likePost(postId);
+
+            if(oldLikeState == true) {
+              setState(() {
+                _liked = false;
+                _likeCount--;
+              });
+              await _postService.unlikePost(postId);
+            } else {
+              setState(() {
+                _liked = true;
+                _likeCount++;
+              });
+              await _postService.likePost(postId);
+            }
           } on Exception catch(e) {
             print("Failed to like post: $e");
             setState(() {
               _liked = oldLikeState;
+              _likeCount = oldLikeCount;
             });
           }
         },
@@ -66,7 +81,7 @@ class PostLikeButtonState extends ConsumerState<PostLikeButton> {
               ),
               const SizedBox(width: 6),
               Text(
-                widget.likeCount.toString(),
+                _likeCount.toString(),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 6),
