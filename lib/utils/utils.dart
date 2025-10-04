@@ -4,7 +4,7 @@ String getUserAvatarUrl(int? userId) {
   return "${dotenv.env['R2_PUBLIC_URL']}/user/$userId/avatar/avatar.png";
 }
 
-String formatTime(DateTime date) {
+String formatToTime(DateTime date) {
   int hour = date.hour;
   int minute = date.minute;
 

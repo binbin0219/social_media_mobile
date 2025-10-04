@@ -18,7 +18,7 @@ class PostList extends StatelessWidget {
           final response = await api.call("GET", "/api/post/get?offset=$offset&recordPerPage=$recordPerPage");
           return (response.data as List).map((post) => post_model.Post.fromJson(post)).toList();
         },
-        itemBuilder:(post) => post_widget.Post(post: post),
+        itemBuilder:(post, index, posts) => post_widget.Post(post: post),
       ),
     );
   }

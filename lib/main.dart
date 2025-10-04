@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/api/api_client.dart';
+import 'package:social_media_mobile/screens/chat_room_page.dart';
 import 'package:social_media_mobile/screens/home_page.dart';
 import 'package:social_media_mobile/screens/login_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,12 +26,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        primaryColor: Colors.purple,
+        primarySwatch: Colors.purple,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
+        '/chat-room': (context) {
+          final dynamic chatRoom = ModalRoute.of(context)!.settings.arguments;
+          return ChatRoomPage(chatRoom: chatRoom);
+        }
       },
     );
   }

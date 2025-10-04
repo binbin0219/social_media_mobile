@@ -1,6 +1,8 @@
+import 'package:social_media_mobile/models/has_id.dart';
+
 import 'chat_attachment.dart';
 
-class ChatMessage {
+class ChatMessage implements HasId {
   final String id;
   final int senderId;
   final String senderUsername;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
-import 'package:social_media_mobile/providers/current_user_provider.dart';
+import 'package:social_media_mobile/services/auth_service.dart';
 import 'package:social_media_mobile/services/chat_room_service.dart';
 import 'package:social_media_mobile/utils/utils.dart';
 import 'package:social_media_mobile/widgets/inifinite_scroll_list.dart';
@@ -24,11 +24,18 @@ class ChatListState extends ConsumerState<ChatList> {
       child: InifiniteScrollList<ChatRoom>(
         recordPerPage: widget.recordPerPage,
         fetchData: (offset) => fetchChatRooms(offset, widget.recordPerPage),
-        itemBuilder:(chatRoom) {
-          final currentUser = ref.watch(currentUserProvider);
+        itemBuilder:(chatRoom, index, chatRooms) {
+          final currentUser = getCurrentUser(ref);
           final targetUser = findTargetUserFromPrivateRoomMembers(chatRoom.members, currentUser!.id);
           
           return InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context, 
+                '/chat-room',
+                arguments: chatRoom
+              );
+            },
             child: SizedBox(
               height: 50,
               child: Row(
@@ -70,7 +77,7 @@ class ChatListState extends ConsumerState<ChatList> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        formatTime(chatRoom.lastMessageAt),
+                        formatToTime(chatRoom.lastMessageAt),
                         style: TextStyle(
                           color: Colors.grey[500],
                         ),

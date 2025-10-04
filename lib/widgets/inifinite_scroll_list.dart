@@ -3,14 +3,16 @@ import 'package:social_media_mobile/models/has_id.dart';
 
 class InifiniteScrollList<T extends HasId> extends StatefulWidget {
   final int recordPerPage;
-  final Widget Function(T) itemBuilder;
+  final Widget Function(T, int, List<T>) itemBuilder;
   final Future<List<T>> Function(int) fetchData;
+  final bool reverse;
 
   const InifiniteScrollList({
     super.key, 
     required this.recordPerPage,
     required this.itemBuilder, 
-    required this.fetchData
+    required this.fetchData,
+    this.reverse = false
   });
 
   @override
@@ -79,6 +81,7 @@ class InifiniteScrollListState<T extends HasId> extends State<InifiniteScrollLis
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      reverse: widget.reverse,
       controller: _scrollController,
       itemCount: _data.length + 1,
       separatorBuilder: (context, index) => const SizedBox(height: 20),
@@ -87,7 +90,7 @@ class InifiniteScrollListState<T extends HasId> extends State<InifiniteScrollLis
           return _isAllFetched ? const SizedBox.shrink()
             : Center(child: CircularProgressIndicator());
         } else {
-          return widget.itemBuilder(_data[index]);
+          return widget.itemBuilder(_data[index], index, _data);
         }
       },
     );
