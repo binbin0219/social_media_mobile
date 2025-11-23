@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
+import 'package:social_media_mobile/providers/chat_state_provider.dart';
 import 'package:social_media_mobile/services/auth_service.dart';
 import 'package:social_media_mobile/services/chat_room_service.dart';
 import 'package:social_media_mobile/utils/utils.dart';
@@ -17,25 +18,37 @@ class ChatList extends ConsumerStatefulWidget {
 }
 
 class ChatListState extends ConsumerState<ChatList> {
+
+  void handleEnterChatRoom(ChatRoom chatRoom) {
+    ref.read(chatStateProvider.notifier).clearUnreadCount(chatRoom.id);
+    ref.read(chatStateProvider.notifier).setActiveChatRoomId(chatRoom.id);
+    Navigator.pushNamed(
+      context, 
+      '/chat-room',
+      arguments: chatRoom
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final chatState = ref.watch(chatStateProvider);
+
     return Padding(
       padding: EdgeInsetsGeometry.all(16),
       child: InifiniteScrollList<ChatRoom>(
         recordPerPage: widget.recordPerPage,
-        fetchData: (offset) => fetchChatRooms(offset, widget.recordPerPage),
+        data: chatState.chatRooms,
+        fetchData: (offset) async {
+          final chatRooms = await fetchChatRooms(offset, widget.recordPerPage);
+          ref.read(chatStateProvider.notifier).addChatRooms(chatRooms);
+          return chatRooms.length;
+        },
         itemBuilder:(chatRoom, index, chatRooms) {
           final currentUser = getCurrentUser(ref);
           final targetUser = findTargetUserFromPrivateRoomMembers(chatRoom.members, currentUser!.id);
           
           return InkWell(
-            onTap: () {
-              Navigator.pushNamed(
-                context, 
-                '/chat-room',
-                arguments: chatRoom
-              );
-            },
+            onTap: () { handleEnterChatRoom(chatRoom); },
             child: SizedBox(
               height: 50,
               child: Row(

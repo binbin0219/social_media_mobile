@@ -1,14 +1,16 @@
+import 'package:social_media_mobile/models/chat_message.dart';
 import 'package:social_media_mobile/models/chat_room_member.dart';
 import 'package:social_media_mobile/models/has_id.dart';
 
 class ChatRoom implements HasId {
   final String id;
-  final String name;
+  String name;
   final String type;
-  final String messagePreview;
-  final DateTime lastMessageAt;
-  final int unreadCount;
+  String messagePreview;
+  DateTime lastMessageAt;
+  int unreadCount;
   final List<ChatRoomMember> members;
+  List<ChatMessage> messages;
 
   ChatRoom({
     required this.id,
@@ -18,7 +20,30 @@ class ChatRoom implements HasId {
     required this.lastMessageAt,
     required this.unreadCount,
     required this.members,
+    this.messages = const []
   });
+
+  ChatRoom copyWith({
+    String? id,
+    String? name,
+    String? type,
+    String? messagePreview,
+    DateTime? lastMessageAt,
+    int? unreadCount,
+    List<ChatRoomMember>? members,
+    List<ChatMessage>? messages,
+  }) {
+    return ChatRoom(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      messagePreview: messagePreview ?? this.messagePreview,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      unreadCount: unreadCount ?? this.unreadCount,
+      members: members ?? this.members,
+      messages: messages ?? this.messages,
+    );
+  }
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
     return ChatRoom(

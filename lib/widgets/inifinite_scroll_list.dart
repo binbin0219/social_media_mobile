@@ -4,7 +4,8 @@ import 'package:social_media_mobile/models/has_id.dart';
 class InifiniteScrollList<T extends HasId> extends StatefulWidget {
   final int recordPerPage;
   final Widget Function(T, int, List<T>) itemBuilder;
-  final Future<List<T>> Function(int) fetchData;
+  final Future<int> Function(int) fetchData;
+  final List<T> data;
   final bool reverse;
 
   const InifiniteScrollList({
@@ -12,6 +13,7 @@ class InifiniteScrollList<T extends HasId> extends StatefulWidget {
     required this.recordPerPage,
     required this.itemBuilder, 
     required this.fetchData,
+    required this.data,
     this.reverse = false
   });
 
@@ -20,7 +22,6 @@ class InifiniteScrollList<T extends HasId> extends StatefulWidget {
 }
 
 class InifiniteScrollListState<T extends HasId> extends State<InifiniteScrollList<T>> {
-  final List<T> _data = [];
   final ScrollController _scrollController = ScrollController();
 
   bool _isError = false;
@@ -55,13 +56,9 @@ class InifiniteScrollListState<T extends HasId> extends State<InifiniteScrollLis
         _isFetching = true;
       });
 
-      final fetchedData = await widget.fetchData(_data.length);
-
-      Set<dynamic> existingDataIds = _data.map((data) => data.id).toSet();
-      List<T> newData = fetchedData.where((data) => !existingDataIds.contains(data.id)).toList();
+      final fetchedDataCount = await widget.fetchData(widget.data.length);
       setState(() {
-        _data.addAll(newData);
-        if(fetchedData.length < widget.recordPerPage) {
+        if(fetchedDataCount < widget.recordPerPage) {
           _isAllFetched = true;
         }
       });
@@ -83,14 +80,14 @@ class InifiniteScrollListState<T extends HasId> extends State<InifiniteScrollLis
     return ListView.separated(
       reverse: widget.reverse,
       controller: _scrollController,
-      itemCount: _data.length + 1,
+      itemCount: widget.data.length + 1,
       separatorBuilder: (context, index) => const SizedBox(height: 20),
       itemBuilder:(context, index) {
-        if(index == _data.length) {
+        if(index == widget.data.length) {
           return _isAllFetched ? const SizedBox.shrink()
             : Center(child: CircularProgressIndicator());
         } else {
-          return widget.itemBuilder(_data[index], index, _data);
+          return widget.itemBuilder(widget.data[index], index, widget.data);
         }
       },
     );

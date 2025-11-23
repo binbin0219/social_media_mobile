@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ChatMessageInput extends StatefulWidget {
-  const ChatMessageInput({super.key});
+  final TextEditingController textController;
+  const ChatMessageInput({super.key, required this.textController});
 
   @override
   State<StatefulWidget> createState() => ChatMessageInputState();
 }
 
 class ChatMessageInputState extends State<ChatMessageInput> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +27,7 @@ class ChatMessageInputState extends State<ChatMessageInput> {
         ],
       ),
       child: TextField(
-        // controller: _controller,
+        controller: widget.textController,
         decoration: const InputDecoration(
           hintText: "Type a message...",
           border: InputBorder.none,

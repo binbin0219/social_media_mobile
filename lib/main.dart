@@ -5,9 +5,9 @@ import 'package:social_media_mobile/screens/chat_room_page.dart';
 import 'package:social_media_mobile/screens/home_page.dart';
 import 'package:social_media_mobile/screens/login_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:social_media_mobile/screens/post_page.dart';
 
 late ApiClient api;
-
 Future<void> main() async {
   await dotenv.load(); // Load the .env file
   api = await ApiClient.create();
@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
         '/chat-room': (context) {
           final dynamic chatRoom = ModalRoute.of(context)!.settings.arguments;
           return ChatRoomPage(chatRoom: chatRoom);
-        }
+        },
+        '/post' : (context) => const PostPage()
       },
     );
   }

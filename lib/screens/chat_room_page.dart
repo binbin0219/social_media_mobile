@@ -1,13 +1,19 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_media_mobile/main.dart';
 import 'package:social_media_mobile/models/chat_message.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
+import 'package:social_media_mobile/providers/chat_state_provider.dart';
 import 'package:social_media_mobile/services/auth_service.dart';
 import 'package:social_media_mobile/services/chat_room_service.dart';
+import 'package:social_media_mobile/utils/utils.dart';
 import 'package:social_media_mobile/widgets/chat_message_bubble.dart';
 import 'package:social_media_mobile/widgets/chat_message_input.dart';
 import 'package:social_media_mobile/widgets/inifinite_scroll_list.dart';
 import 'package:social_media_mobile/widgets/user_avatar.dart';
+import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 class ChatRoomPage extends ConsumerStatefulWidget {
   final ChatRoom chatRoom;
@@ -20,10 +26,17 @@ class ChatRoomPage extends ConsumerStatefulWidget {
 
 class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
   final int _recordPerPage = 20;
+  final _messageTextController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   bool _isSameDay(DateTime a, DateTime b) {
@@ -33,6 +46,30 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
   @override
   Widget build(BuildContext context) {
     final targetUser = findTargetUserFromPrivateRoomMembers(widget.chatRoom.members, getCurrentUser(ref).id);
+    final chatState = ref.watch(chatStateProvider);
+    final messages = chatState.chatRooms
+      .firstWhere((r) => r.id == chatState.activeChatRoomId)
+      .messages;
+
+    void handleSendMsg() {
+      final result = sendMsg(
+        ref, 
+        _messageTextController.text, 
+        targetUser.userId
+      );
+
+      if(!result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to send message! please try again!"),
+            duration: Duration(seconds: 2),
+          )
+        );
+        return;
+      }
+
+      _messageTextController.clear();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -73,6 +110,7 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
               child: InifiniteScrollList<ChatMessage>(
                 reverse: true,
                 recordPerPage: _recordPerPage, 
+                data: messages,
                 itemBuilder: (chatMessage, index, chatMessages) {
                   bool isLast = index == chatMessages.length - 1;
                   bool isDateChange = !isLast && !_isSameDay(chatMessage.createAt, chatMessages[index + 1].createAt);
@@ -96,7 +134,11 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
 
                   return ChatMessageBubble(message: chatMessage);
                 }, 
-                fetchData: (offset) async => await fetchChatMessages(widget.chatRoom.id, offset, _recordPerPage)
+                fetchData: (offset) async {
+                  final messages = await fetchChatMessages(widget.chatRoom.id, offset, _recordPerPage);
+                  ref.read(chatStateProvider.notifier).addMessages(messages, widget.chatRoom.id);
+                  return messages.length;
+                }
               ),
             )
           ),
@@ -122,7 +164,7 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
                 ),
 
                 Expanded(
-                  child: ChatMessageInput(),
+                  child: ChatMessageInput(textController: _messageTextController),
                 ),
 
                 Row(
@@ -137,7 +179,7 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
                         shape: BoxShape.circle
                       ),
                       child: IconButton(
-                      onPressed: () {}, 
+                      onPressed: handleSendMsg, 
                         icon: Icon(Icons.send, color: Colors.white)
                       ),
                     )

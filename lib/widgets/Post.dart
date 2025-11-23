@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_mobile/widgets/PostAttachmentCarousel.dart';
 import 'package:social_media_mobile/widgets/PostContent.dart';
 import 'package:social_media_mobile/models/post.dart' as post_model;
+import 'package:social_media_mobile/widgets/post_header.dart';
 import 'package:social_media_mobile/widgets/post_like_button.dart';
 
 class Post extends StatefulWidget {
@@ -25,84 +26,8 @@ class PostState extends State<Post> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // go to profile
-                    },
-                    child: const CircleAvatar(
-                      radius: 18,
-                      backgroundImage: NetworkImage(
-                        'https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg',
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "jiungbin0219",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-
-                      const Text(
-                        "3 weeks ago",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              IconButton(
-                icon: const Icon(Icons.more_horiz),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context, 
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.all(Radius.circular(15))
-                    ),
-                    builder: (BuildContext context) {
-                      return SafeArea(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 4,
-                              margin: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 212, 212, 212),
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-
-                            ListTile(
-                              leading: Icon(Icons.edit_outlined),
-                              title: const Text("Edit"),
-                            ),
-
-                            ListTile(
-                              leading: Icon(Icons.delete_outline),
-                              title: const Text("Delete"),
-                            )
-                          ],
-                        )
-                      );
-                    }
-                  );
-                }
-              ),
-            ],
-          ),
-
+          PostHeader(),
+          
           const SizedBox(height: 12),
 
           Align(
@@ -135,7 +60,13 @@ class PostState extends State<Post> {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context, 
+                      "/post",
+                      arguments: widget.post
+                    );
+                  },
                   borderRadius: BorderRadius.circular(6),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

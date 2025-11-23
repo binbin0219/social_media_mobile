@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_media_mobile/providers/websocket_client_provider.dart';
 import 'package:social_media_mobile/widgets/chat_list.dart';
 import 'package:social_media_mobile/widgets/post_list.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => HomePateState();
+  ConsumerState<ConsumerStatefulWidget> createState() => HomePateState();
 }
 
-class HomePateState extends State<HomePage> {
+class HomePateState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
 
   Widget _getBodyWidget(int selectedIndex) {
@@ -40,6 +42,8 @@ class HomePateState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(websocketClientProvider);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 246, 250),
       appBar: AppBar(
