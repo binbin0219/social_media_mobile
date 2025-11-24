@@ -37,6 +37,11 @@ class ChatStateProvider extends Notifier<ChatState> {
     state = state.copyWith(activeChatRoomId: chatRoomId);
   }
 
+  void clearActiveChatRoomId() {
+    state.activeChatRoomId = null;
+    state = state.copyWith();
+  }
+
   void clearUnreadCount(String chatRoomId) {
     final chatRoomIndex = state.chatRooms.indexWhere((cr) => cr.id == chatRoomId);
     if(chatRoomIndex == -1) return;

@@ -6,6 +6,7 @@ import 'package:social_media_mobile/main.dart';
 import 'package:social_media_mobile/models/chat_message.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
 import 'package:social_media_mobile/providers/chat_state_provider.dart';
+import 'package:social_media_mobile/providers/pages/chat_room_page_provider.dart';
 import 'package:social_media_mobile/services/auth_service.dart';
 import 'package:social_media_mobile/services/chat_room_service.dart';
 import 'package:social_media_mobile/utils/utils.dart';
@@ -33,12 +34,6 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
@@ -50,6 +45,8 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
     final messages = chatState.chatRooms
       .firstWhere((r) => r.id == chatState.activeChatRoomId)
       .messages;
+
+    ref.watch(chatRoomPageProvider);
 
     void handleSendMsg() {
       final result = sendMsg(
