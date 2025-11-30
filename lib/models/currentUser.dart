@@ -1,4 +1,3 @@
-
 class CurrentUser {
   final int id;
   final String country;
@@ -41,6 +40,50 @@ class CurrentUser {
     required this.createAt,
     required this.updatedAt,
   });
+
+  CurrentUser copyWith({
+    int? id,
+    String? country,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? description,
+    String? occupation,
+    dynamic phoneNumber,
+    String? region,
+    String? relationshipStatus,
+    String? gender,
+    dynamic friendship,
+    int? friendCount,
+    int? newNotificationCount,
+    int? unreadChatMessageCount,
+    int? postCount,
+    int? likeCount,
+    DateTime? createAt,
+    DateTime? updatedAt,
+  }) {
+    return CurrentUser(
+      id: id ?? this.id,
+      country: country ?? this.country,
+      username: username ?? this.username,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      description: description ?? this.description,
+      occupation: occupation ?? this.occupation,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      region: region ?? this.region,
+      relationshipStatus: relationshipStatus ?? this.relationshipStatus,
+      gender: gender ?? this.gender,
+      friendship: friendship ?? this.friendship,
+      friendCount: friendCount ?? this.friendCount,
+      newNotificationCount: newNotificationCount ?? this.newNotificationCount,
+      unreadChatMessageCount: unreadChatMessageCount ?? this.unreadChatMessageCount,
+      postCount: postCount ?? this.postCount,
+      likeCount: likeCount ?? this.likeCount,
+      createAt: createAt ?? this.createAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   factory CurrentUser.fromJson(Map<String, dynamic> json) {
     return CurrentUser(

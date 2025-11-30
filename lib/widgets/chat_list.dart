@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
 import 'package:social_media_mobile/providers/chat_state_provider.dart';
+import 'package:social_media_mobile/providers/current_user_provider.dart';
 import 'package:social_media_mobile/services/auth_service.dart';
 import 'package:social_media_mobile/services/chat_room_service.dart';
 import 'package:social_media_mobile/utils/utils.dart';
@@ -20,8 +21,10 @@ class ChatList extends ConsumerStatefulWidget {
 class ChatListState extends ConsumerState<ChatList> {
 
   void handleEnterChatRoom(ChatRoom chatRoom) {
-    ref.read(chatStateProvider.notifier).clearUnreadCount(chatRoom.id);
+    final clearedCount = ref.read(chatStateProvider.notifier)
+      .clearUnreadCount(chatRoom.id);
     ref.read(chatStateProvider.notifier).setActiveChatRoomId(chatRoom.id);
+    ref.read(currentUserProvider.notifier).decrementUnreadMessages(clearedCount);
     Navigator.pushNamed(
       context, 
       '/chat-room',

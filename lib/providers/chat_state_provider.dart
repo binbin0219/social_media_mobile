@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media_mobile/models/chat_message.dart';
 import 'package:social_media_mobile/models/chat_room.dart';
+import 'package:social_media_mobile/models/currentUser.dart';
+import 'package:social_media_mobile/providers/current_user_provider.dart';
 import 'package:social_media_mobile/utils/chat.dart';
 import 'package:social_media_mobile/utils/utils.dart';
 
@@ -42,12 +43,14 @@ class ChatStateProvider extends Notifier<ChatState> {
     state = state.copyWith();
   }
 
-  void clearUnreadCount(String chatRoomId) {
+  int clearUnreadCount(String chatRoomId) {
     final chatRoomIndex = state.chatRooms.indexWhere((cr) => cr.id == chatRoomId);
-    if(chatRoomIndex == -1) return;
+    if(chatRoomIndex == -1) return 0;
 
+    final clearedCount = state.chatRooms[chatRoomIndex].unreadCount;
     state.chatRooms[chatRoomIndex].unreadCount = 0;
     state = state.copyWith();
+    return clearedCount;
   }
 
   void addChatRooms(List<ChatRoom> chatRooms) {
@@ -90,6 +93,7 @@ class ChatStateProvider extends Notifier<ChatState> {
 
       if(!isActive) {
         newCr.unreadCount++;
+        ref.read(currentUserProvider.notifier).incrementUnreadMessages();
       }
 
       return newCr;

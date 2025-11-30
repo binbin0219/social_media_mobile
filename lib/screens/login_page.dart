@@ -29,7 +29,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         await loginUser(_email, _password);
-        ref.read(currentUserProvider.notifier).state = await fetchCurrentUser();
+        ref.read(currentUserProvider.notifier).setUser(await fetchCurrentUser());
         Navigator.pushNamed(context, "/home");
       }
     } on DioException catch (e) {

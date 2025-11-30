@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_media_mobile/providers/current_user_provider.dart';
 import 'package:social_media_mobile/providers/websocket_client_provider.dart';
 import 'package:social_media_mobile/widgets/chat_list.dart';
 import 'package:social_media_mobile/widgets/post_list.dart';
@@ -40,8 +41,13 @@ class HomePateState extends ConsumerState<HomePage> {
     // Navigate to the appropriate screen...
   }
 
+  void handleEnterChatSection() {
+    // ref.read(currentUserProvider.notifier).updateUnreadMessages(0);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentUser = ref.watch(currentUserProvider)!;
     ref.watch(websocketClientProvider);
 
     return Scaffold(
@@ -179,18 +185,45 @@ class HomePateState extends ConsumerState<HomePage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          _selectedIndex == 2
-                              ? Icons.chat_bubble
-                              : Icons.chat_bubble_outline,
-                          size: 32,
-                          color:
+                      Stack(
+                        children: [
+                          IconButton(
+                            icon: Icon(
                               _selectedIndex == 2
-                                  ? Colors.black
-                                  : Color(0xFF999AA1),
-                        ),
-                        onPressed: () => _onItemTapped(2),
+                                  ? Icons.chat_bubble
+                                  : Icons.chat_bubble_outline,
+                              size: 32,
+                              color:
+                                  _selectedIndex == 2
+                                      ? Colors.black
+                                      : Color(0xFF999AA1),
+                            ),
+                            onPressed: () {
+                              _onItemTapped(2);
+                              handleEnterChatSection();
+                            },
+                          ),
+                          if(currentUser.unreadChatMessageCount > 0)
+                            Positioned(
+                              top: 0,
+                              right: 2,
+                              child: Container(
+                                padding: EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  currentUser.unreadChatMessageCount.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            )
+                        ],
                       ),
                       // const SizedBox(width: 30),
                       IconButton(
