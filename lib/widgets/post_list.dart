@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_media_mobile/main.dart';
 import 'package:social_media_mobile/utils/utils.dart';
-import 'package:social_media_mobile/widgets/Post.dart' as post_widget;
+import 'package:social_media_mobile/widgets/post_card.dart' as post_widget;
 import 'package:social_media_mobile/models/post.dart' as post_model;
 import 'package:social_media_mobile/widgets/inifinite_scroll_list.dart';
 
@@ -31,7 +31,7 @@ class PostListState extends State<PostList> {
           });
           return posts.length;
         },
-        itemBuilder:(post, index, posts) => post_widget.Post(post: post),
+        itemBuilder:(post, index, posts) => post_widget.PostCard(post: post),
       ),
     );
   }
