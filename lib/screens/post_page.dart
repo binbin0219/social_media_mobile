@@ -6,6 +6,7 @@ import 'package:social_media_mobile/widgets/post_card.dart' as post_widget;
 import 'package:social_media_mobile/widgets/post_comment_button.dart';
 import 'package:social_media_mobile/widgets/post_header.dart';
 import 'package:social_media_mobile/widgets/post_like_button.dart';
+import 'package:social_media_mobile/widgets/user_avatar.dart';
 
 class PostPage extends StatefulWidget {
 
@@ -73,7 +74,30 @@ class PostPageState extends State<PostPage> {
 
           const SizedBox(height: 16),
 
-          
+          Padding(
+            padding: _pagePadding,
+            child: Row(
+              children: [
+
+                UserAvatar(
+                  userId: post.user.id,
+                  width: 40,
+                  height: 40,
+                ),
+
+                const SizedBox(width: 8),
+                
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    color: Colors.grey
+                  ),
+                  child: Text('asdasdasdasd'),
+                )
+              ],
+            ),
+          )
         ],
       )
     );
