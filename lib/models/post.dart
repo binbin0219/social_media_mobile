@@ -1,5 +1,6 @@
 import 'package:social_media_mobile/models/has_id.dart';
 import 'package:social_media_mobile/models/post_attachment.dart';
+import 'package:social_media_mobile/models/user.dart';
 
 class Post implements HasId {
   @override
@@ -13,7 +14,7 @@ class Post implements HasId {
   final List<PostAttachment> attachments;
   final bool? isNew;
   final bool liked;
-  final dynamic user;
+  final User user;
   final int? userId;
 
   Post({
@@ -27,7 +28,7 @@ class Post implements HasId {
     required this.attachments,
     this.isNew,
     required this.liked,
-    this.user,
+    required this.user,
     this.userId
   });
 
@@ -42,7 +43,7 @@ class Post implements HasId {
       comments: json["comments"] ?? [], 
       attachments: (json["attachments"] as List).map((attachment) => PostAttachment.fromJson(attachment)).toList(),
       liked: json["liked"] ?? false,
-      user: json["user"],
+      user: User.fromJson(json["user"]),
       userId: json["userId"]
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:social_media_mobile/models/has_id.dart';
 
 String getUserAvatarUrl(int? userId) {
+  print(userId);
   return "${dotenv.env['R2_PUBLIC_URL']}/user/$userId/avatar/avatar.png";
 }
 

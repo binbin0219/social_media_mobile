@@ -1,0 +1,115 @@
+class User {
+  final int id;
+  final String country;
+  final String username;
+  final String firstName;
+  final String lastName;
+  final String description;
+  final String occupation;
+  final dynamic phoneNumber; // JsonNode equivalent
+  final String region;
+  final String relationshipStatus;
+  final String gender;
+  final dynamic friendship;
+  final int friendCount;
+  final int newNotificationCount;
+  final int unreadChatMessageCount;
+  final int postCount;
+  final int likeCount;
+  final DateTime createAt;
+  final DateTime? updatedAt;
+
+  User({
+    required this.id,
+    required this.country,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    required this.description,
+    required this.occupation,
+    this.phoneNumber,
+    required this.region,
+    required this.relationshipStatus,
+    required this.gender,
+    this.friendship,
+    required this.friendCount,
+    required this.newNotificationCount,
+    required this.unreadChatMessageCount,
+    required this.postCount,
+    required this.likeCount,
+    required this.createAt,
+    this.updatedAt,
+  });
+
+  User copyWith({
+    int? id,
+    String? country,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? description,
+    String? occupation,
+    dynamic phoneNumber,
+    String? region,
+    String? relationshipStatus,
+    String? gender,
+    dynamic friendship,
+    int? friendCount,
+    int? newNotificationCount,
+    int? unreadChatMessageCount,
+    int? postCount,
+    int? likeCount,
+    DateTime? createAt,
+    DateTime? updatedAt,
+  }) {
+    return User(
+      id: id ?? this.id,
+      country: country ?? this.country,
+      username: username ?? this.username,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      description: description ?? this.description,
+      occupation: occupation ?? this.occupation,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      region: region ?? this.region,
+      relationshipStatus: relationshipStatus ?? this.relationshipStatus,
+      gender: gender ?? this.gender,
+      friendship: friendship ?? this.friendship,
+      friendCount: friendCount ?? this.friendCount,
+      newNotificationCount: newNotificationCount ?? this.newNotificationCount,
+      unreadChatMessageCount: unreadChatMessageCount ?? this.unreadChatMessageCount,
+      postCount: postCount ?? this.postCount,
+      likeCount: likeCount ?? this.likeCount,
+      createAt: createAt ?? this.createAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    print(json);
+    return User(
+      id: json['id'] ?? 0,
+      country: json['country'] ?? '',
+      username: json['username'] ?? '',
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      description: json['description'] ?? '',
+      occupation: json['occupation'] ?? '',
+      phoneNumber: json['phoneNumber'],
+      region: json['region'] ?? '',
+      relationshipStatus: json['relationshipStatus'] ?? '',
+      gender: json['gender'] ?? '',
+      // friendship: json['friendship'] != null
+      //     ? Friendship.fromJson(json['friendship'])
+      //     : null,
+      friendship: null,
+      friendCount: json['friendCount'] ?? 0,
+      newNotificationCount: json['newNotificationCount'] ?? 0,
+      unreadChatMessageCount: json['unreadChatMessageCount'] ?? 0,
+      postCount: json['postCount'] ?? 0,
+      likeCount: json['likeCount'] ?? 0,
+      createAt: DateTime.parse(json['createAt']),
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+    );
+  }
+}

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_mobile/widgets/user_avatar.dart';
 
 class PostHeader extends StatelessWidget {
   final double fontSize;
+  final int? userId;
 
   const PostHeader({
     super.key,
-    this.fontSize = 13
+    this.fontSize = 13,
+    this.userId
   });
 
   @override
@@ -19,12 +22,11 @@ class PostHeader extends StatelessWidget {
               onTap: () {
                 // go to profile
               },
-              child: const CircleAvatar(
-                radius: 18,
-                backgroundImage: NetworkImage(
-                  'https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg',
-                ),
-              ),
+              child: UserAvatar(
+                userId: userId,
+                width: 40,
+                height: 40,
+              )
             ),
 
             const SizedBox(width: 12),

@@ -27,7 +27,7 @@ class PostPageState extends State<PostPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         titleSpacing: 0,
-        title: PostHeader()
+        title: PostHeader(userId: post.user.id)
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

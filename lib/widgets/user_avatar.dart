@@ -3,13 +3,13 @@ import 'package:social_media_mobile/utils/utils.dart';
 import 'package:social_media_mobile/widgets/SmartImage.dart';
 
 class UserAvatar extends StatefulWidget {
-  final int userId;
+  final int? userId;
   final double? width;
   final double? height;
 
   const UserAvatar({
     super.key, 
-    required this.userId,
+    this.userId,
     this.width,
     this.height
   });

@@ -9,7 +9,7 @@ import 'package:social_media_mobile/widgets/post_like_button.dart';
 class PostCard extends StatefulWidget {
   final post_model.Post post;
   final bool showHeader;
-
+  
   const PostCard({super.key, required this.post, this.showHeader = true});
 
   @override
@@ -28,7 +28,7 @@ class PostCardState extends State<PostCard> {
       child: Column(
         children: [
           if(widget.showHeader) ...[
-            PostHeader(),
+            PostHeader(userId: widget.post.user.id),
             const SizedBox(height: 12)
           ],
 
