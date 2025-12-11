@@ -108,9 +108,9 @@ class ChatRoomPageState extends ConsumerState<ChatRoomPage> {
                 reverse: true,
                 recordPerPage: _recordPerPage, 
                 data: messages,
-                itemBuilder: (chatMessage, index, chatMessages) {
-                  bool isLast = index == chatMessages.length - 1;
-                  bool isDateChange = !isLast && !_isSameDay(chatMessage.createAt, chatMessages[index + 1].createAt);
+                itemBuilder: (chatMessage, index) {
+                  bool isLast = index == messages.length - 1;
+                  bool isDateChange = !isLast && !_isSameDay(chatMessage.createAt, messages[index + 1].createAt);
 
                   if(isLast || isDateChange) {
                     return Column(

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_mobile/main.dart';
 import 'package:social_media_mobile/models/post.dart' as post_model;
+import 'package:social_media_mobile/models/post_comment.dart' as post_comment_model;
+import 'package:social_media_mobile/utils/utils.dart';
 import 'package:social_media_mobile/widgets/PostAttachmentCarousel.dart';
 import 'package:social_media_mobile/widgets/PostContent.dart';
+import 'package:social_media_mobile/widgets/inifinite_scroll_list.dart';
 import 'package:social_media_mobile/widgets/post_card.dart' as post_widget;
+import 'package:social_media_mobile/widgets/post_comment.dart' as post_comment_widget;
 import 'package:social_media_mobile/widgets/post_comment_button.dart';
 import 'package:social_media_mobile/widgets/post_header.dart';
 import 'package:social_media_mobile/widgets/post_like_button.dart';
@@ -17,6 +22,7 @@ class PostPage extends StatefulWidget {
 }
 
 class PostPageState extends State<PostPage> {
+  List<post_comment_model.PostComment> _comments = [];
   final EdgeInsetsGeometry _pagePadding = 
     EdgeInsetsGeometry.directional(start: 8);
   @override
@@ -74,29 +80,32 @@ class PostPageState extends State<PostPage> {
 
           const SizedBox(height: 16),
 
-          Padding(
-            padding: _pagePadding,
-            child: Row(
-              children: [
+          Expanded(
+            child: InifiniteScrollList<post_comment_model.PostComment>(
+              recordPerPage: 10, 
+              itemBuilder: (comment, index) {
+                return Padding(
+                  padding: _pagePadding,
+                  child: post_comment_widget.PostComment(post: post, comment: comment)
+                );
+              }, 
+              fetchData: (index) async {
+                final response = await api.call(
+                  "GET", 
+                  "/api/comment/get?postId=${post.id}&recordPerPage=10&offset=${_comments.length}"
+                );
+                final fetchedComments = (response.data['comments'] as List)
+                  .map((c) => post_comment_model.PostComment.fromJson(c))
+                  .toList();
 
-                UserAvatar(
-                  userId: post.user.id,
-                  width: 40,
-                  height: 40,
-                ),
+                setState(() {
+                  _comments = mergeItemsWithUniqueId(fetchedComments, _comments);
+                });
 
-                const SizedBox(width: 8),
-                
-                Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    color: Colors.grey
-                  ),
-                  child: Text('asdasdasdasd'),
-                )
-              ],
-            ),
+                return fetchedComments.length;
+              }, 
+              data: _comments
+            )
           )
         ],
       )

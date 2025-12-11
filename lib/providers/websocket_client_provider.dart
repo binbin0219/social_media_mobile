@@ -39,7 +39,6 @@ class WebsocketClientNotifier extends AsyncNotifier<WebsocketClient> {
           websocketClient.subscribe(
             destination: "/user/queue/notifications",
             callback: (frame) {
-              print("message: ${frame.body}");
             }
           );
           

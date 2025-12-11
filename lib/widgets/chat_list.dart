@@ -46,7 +46,7 @@ class ChatListState extends ConsumerState<ChatList> {
           ref.read(chatStateProvider.notifier).addChatRooms(chatRooms);
           return chatRooms.length;
         },
-        itemBuilder:(chatRoom, index, chatRooms) {
+        itemBuilder:(chatRoom, index) {
           final currentUser = getCurrentUser(ref);
           final targetUser = findTargetUserFromPrivateRoomMembers(chatRoom.members, currentUser!.id);
           

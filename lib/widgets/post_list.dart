@@ -31,7 +31,7 @@ class PostListState extends State<PostList> {
           });
           return posts.length;
         },
-        itemBuilder:(post, index, posts) => post_widget.PostCard(post: post),
+        itemBuilder:(post, index) => post_widget.PostCard(post: post),
       ),
     );
   }
